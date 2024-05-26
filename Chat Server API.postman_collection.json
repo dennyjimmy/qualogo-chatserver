@@ -1,0 +1,503 @@
+{
+	"info": {
+		"_postman_id": "5ddf1b59-8ffb-43ca-8f78-dfb6b9370b60",
+		"name": "Chat Server API",
+		"description": "API documentation for the chat server backend services",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28878488"
+	},
+	"item": [
+		{
+			"name": "01. Authentication",
+			"item": [
+				{
+					"name": "01. register a new user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin\",\"password\":\"12345678\", \"role\": [\"user\"], \"email\":\"admin@gmail.com\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/signup",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02. login and get Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let responseData = pm.response.json(); // Parse the response body as JSON\r",
+									"let accessToken = responseData.accessToken; // Extract the accessToken value\r",
+									"console.log(accessToken);\r",
+									"// Set the accessToken as an environment variable named \"token\"\r",
+									"pm.collectionVariables.set(\"token\", accessToken);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin\",\"password\":\"12345678\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/signin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02. chat",
+			"item": [
+				{
+					"name": "01. Join a chat room",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "<string>",
+									"description": "(Required) The username of the user joining the chat room"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/chat/joinRoom",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"chat",
+								"joinRoom"
+							]
+						},
+						"description": "Enables users to join the chat room"
+					},
+					"response": [
+						{
+							"name": "Successfully joined the chat room",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "<string>",
+											"description": "(Required) The username of the user joining the chat room"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/chat/joinRoom",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chat",
+										"joinRoom"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "<string>"
+						}
+					]
+				},
+				{
+					"name": "02. Send a message",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "<string>",
+									"description": "(Required) The username of the user sending the message",
+									"disabled": true
+								},
+								{
+									"key": "message",
+									"value": "message của admin",
+									"description": "message của admin"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/chat/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"chat",
+								"send"
+							]
+						},
+						"description": "Sends a message from a user to the chat room"
+					},
+					"response": [
+						{
+							"name": "Successfully sent the message",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "<string>",
+											"description": "(Required) The username of the user sending the message"
+										},
+										{
+											"key": "message",
+											"value": "<string>",
+											"description": "(Required) The message to be sent"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/chat/send",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chat",
+										"send"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "<string>"
+						}
+					]
+				},
+				{
+					"name": "03. Retrieve messages",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/chat/receive?timestamp=1622548800000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"chat",
+								"receive"
+							],
+							"query": [
+								{
+									"key": "timestamp",
+									"value": "1622548800000",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Retrieves the history of the chat room from the given timestamp"
+					},
+					"response": [
+						{
+							"name": "Successfully retrieved messages",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/chat/receive?timestamp=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chat",
+										"receive"
+									],
+									"query": [
+										{
+											"key": "timestamp",
+											"value": "<integer>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"<integer>\",\n    \"username\": \"<string>\",\n    \"message\": \"<string>\",\n    \"timestamp\": \"<integer>\"\n  },\n  {\n    \"id\": \"<integer>\",\n    \"username\": \"<string>\",\n    \"message\": \"<string>\",\n    \"timestamp\": \"<integer>\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "04. Delete a message",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/chat/deleteMsg?messageId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"chat",
+								"deleteMsg"
+							],
+							"query": [
+								{
+									"key": "messageId",
+									"value": "5",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Deletes a message in the chat room by message ID"
+					},
+					"response": [
+						{
+							"name": "Successfully deleted the message",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/chat/deleteMsg?messageId=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chat",
+										"deleteMsg"
+									],
+									"query": [
+										{
+											"key": "messageId",
+											"value": "<integer>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "<string>"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
