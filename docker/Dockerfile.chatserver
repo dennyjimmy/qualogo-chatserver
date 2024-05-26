@@ -1,0 +1,8 @@
+# Dockerfile for Chatserver
+FROM openjdk:17-jdk-slim
+COPY target/chatserver.jar /app/chatserver.jar
+COPY docker/log4j2.xml /app/log4j2.xml
+WORKDIR /app
+VOLUME /logs
+EXPOSE 8080
+ENTRYPOINT ["java", "-Dlog4j.configurationFile=/app/log4j2.xml", "-jar", "/app/chatserver.jar"]

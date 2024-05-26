@@ -44,7 +44,7 @@ The project consists of multiple services organized as follows:
 2. **Build the project**:
    - Run the build script to clean and package the application:
      \`\`\`bash
-     ./01.build.bat
+     ./01-build.bat
      \`\`\`
    - This script runs the Maven command:
      \`\`\`bash
@@ -52,14 +52,25 @@ The project consists of multiple services organized as follows:
      \`\`\`
 
 3. **Run the project**:
+   - Use the run script to start the application in Windows:
+     \`\`\`bash
+     ./02-run.bat
+     \`\`\`
+   - This script runs:
+     \`\`\`bash
+     java -jar target\chatserver.jar
+     \`\`\`
+
+4. **Deploy to Kubernetes cluster**:
    - Use the run script to start the application using Docker Compose:
      \`\`\`bash
-     ./02.run.bat
+     ./03-runAsDocker.bat
      \`\`\`
    - This script runs:
      \`\`\`bash
      docker-compose up --build
      \`\`\`
+
 
 ## Achievements
 The following achievements have been realized:
@@ -80,17 +91,17 @@ Use Postman to test the RESTful endpoints and WebSocket communication. Below are
 Include snapshots of Postman illustrating each step:
 
 1. **Signup**:
-   ![Signup](./snapshots/signup.png)
+   ![Signup](./docs/00-register.JPG)
 2. **Sign in**:
-   ![Sign in](./snapshots/signin.png)
+   ![Sign in](./docs/02-login.JPG)
 3. **Join Room**:
-   ![Join Room](./snapshots/joinRoom.png)
+   ![Join Room](./docs/02-joinRoom.JPG)
 4. **Send Message**:
-   ![Send Message](./snapshots/send.png)
+   ![Send Message](./docs/03-send.JPG)
 5. **Receive Messages**:
-   ![Receive Messages](./snapshots/receive.png)
+   ![Receive Messages](./docs/04-receive.JPG)
 6. **Delete Message**:
-   ![Delete Message](./snapshots/delete.png)
+   ![Delete Message](./docs/05-delete.JPG)
 
 ### Code Quality
 - **Unit Tests**: Implemented using JUnit and Mockito to ensure functionality.

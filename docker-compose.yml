@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  chatserver:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.chatserver
+    volumes:
+      - logs:/logs
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+      - redis
+
+  mariadb:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chatdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  redis:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.redis
+    ports:
+      - "6379:6379"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - chatserver
+
+  splunk:
+    image: splunk/splunk:latest
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_PASSWORD: 123456
+    ports:
+      - "8000:8000"
+
+  rsync:
+    image: alpine
+    volumes:
+      - logs:/logs
+    entrypoint: >
+      /bin/sh -c "while true; do
+      rsync -av /logs/ splunk:/opt/splunk/var/log/chatserver/;
+      sleep 60;
+      done"
+
+volumes:
+  logs:
+  db-data:
