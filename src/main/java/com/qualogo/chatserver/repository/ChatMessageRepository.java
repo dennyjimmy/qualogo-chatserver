@@ -1,6 +1,6 @@
 package com.qualogo.chatserver.repository;
 
-import com.qualogo.chatserver.model.ChatMessage;
+import com.qualogo.chatserver.models.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

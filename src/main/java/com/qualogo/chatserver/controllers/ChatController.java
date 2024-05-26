@@ -1,6 +1,6 @@
-package com.qualogo.chatserver.controller;
+package com.qualogo.chatserver.controllers;
 
-import com.qualogo.chatserver.model.ChatMessage;
+import com.qualogo.chatserver.models.ChatMessage;
 import com.qualogo.chatserver.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package com.qualogo.chatserver.service;
 
-import com.qualogo.chatserver.model.ChatMessage;
+import com.qualogo.chatserver.models.ChatMessage;
 import com.qualogo.chatserver.repository.ChatMessageRepository;
 import com.qualogo.chatserver.security.services.UserDetailsImpl;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class ChatService {
     private static final String CHAT_ROOM_MESSAGES_BY_TIME = "chatRoomMessagesByTime";
     private static final String RATE_LIMIT_EXCEEDED = "Rate limit exceeded. Please try again later.";
 
-    private static String getCurrentUser() {
+    public static String getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 

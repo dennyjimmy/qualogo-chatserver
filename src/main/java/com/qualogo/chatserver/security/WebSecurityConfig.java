@@ -59,12 +59,10 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(getUnauthorizedHandler()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth
-                        -> /*auth.requestMatchers("/api/auth/**").permitAll()
-              .requestMatchers("/api/test/**").permitAll()
-              .anyRequest().authenticated()*/ auth.anyRequest().permitAll()
+                        -> auth.anyRequest().permitAll()
                 );
 
         http.authenticationProvider(authenticationProvider());
@@ -72,5 +70,19 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * @return the unauthorizedHandler
+     */
+    public AuthEntryPointJwt getUnauthorizedHandler() {
+        return unauthorizedHandler;
+    }
+
+    /**
+     * @param unauthorizedHandler the unauthorizedHandler to set
+     */
+    public void setUnauthorizedHandler(AuthEntryPointJwt unauthorizedHandler) {
+        this.unauthorizedHandler = unauthorizedHandler;
     }
 }

@@ -32,13 +32,13 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date((new Date()).getTime() + getJwtExpirationMs()))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+    public Key key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(getJwtSecret()));
     }
 
     public String getUserNameFromJwtToken(String token) {
@@ -61,5 +61,33 @@ public class JwtUtils {
         }
 
         return false;
+    }
+
+    /**
+     * @return the jwtSecret
+     */
+    public String getJwtSecret() {
+        return jwtSecret;
+    }
+
+    /**
+     * @param jwtSecret the jwtSecret to set
+     */
+    public void setJwtSecret(String jwtSecret) {
+        this.jwtSecret = jwtSecret;
+    }
+
+    /**
+     * @return the jwtExpirationMs
+     */
+    public int getJwtExpirationMs() {
+        return jwtExpirationMs;
+    }
+
+    /**
+     * @param jwtExpirationMs the jwtExpirationMs to set
+     */
+    public void setJwtExpirationMs(int jwtExpirationMs) {
+        this.jwtExpirationMs = jwtExpirationMs;
     }
 }

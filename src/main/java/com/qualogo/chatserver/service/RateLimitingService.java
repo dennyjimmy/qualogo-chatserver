@@ -22,8 +22,36 @@ public class RateLimitingService {
         String key = "rateLimit:" + userId;
         Long currentCount = redisTemplate.opsForValue().increment(key, 1);
         if (currentCount == 1) {
-            redisTemplate.expire(key, timeWindow, TimeUnit.SECONDS);
+            redisTemplate.expire(key, getTimeWindow(), TimeUnit.SECONDS);
         }
-        return currentCount <= maxRequests;
+        return currentCount <= getMaxRequests();
+    }
+
+    /**
+     * @return the maxRequests
+     */
+    public int getMaxRequests() {
+        return maxRequests;
+    }
+
+    /**
+     * @param maxRequests the maxRequests to set
+     */
+    public void setMaxRequests(int maxRequests) {
+        this.maxRequests = maxRequests;
+    }
+
+    /**
+     * @return the timeWindow
+     */
+    public int getTimeWindow() {
+        return timeWindow;
+    }
+
+    /**
+     * @param timeWindow the timeWindow to set
+     */
+    public void setTimeWindow(int timeWindow) {
+        this.timeWindow = timeWindow;
     }
 }

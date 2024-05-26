@@ -1,4 +1,4 @@
-package com.qualogo.chatserver.model;
+package com.qualogo.chatserver.models;
 
 import jakarta.persistence.*;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,6 +27,12 @@ public class ChatMessage {
         this.username = username;
         this.message = message;
         this.timestamp = System.currentTimeMillis();
+    }
+    public ChatMessage(long id, String username, String message, long timestamp) {
+        this.id = id;
+        this.username = username;
+        this.message = message;
+        this.timestamp = timestamp;
     }
 
     // Getters and Setters
