@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -33,6 +34,11 @@ public class ChatService {
     private static final String CHAT_ROOM_MESSAGES_BY_TIME = "chatRoomMessagesByTime";
     private static final String RATE_LIMIT_EXCEEDED = "Rate limit exceeded. Please try again later.";
 
+    /**
+     * Retrieves the current authenticated user's username.
+     *
+     * @return the username of the current authenticated user.
+     */
     public static String getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -46,6 +52,11 @@ public class ChatService {
         }
     }
 
+    /**
+     * Allows a user to join a chat room.
+     *
+     * @return a welcome message if the user is allowed to join, otherwise a rate limit exceeded message.
+     */
     public String joinRoom() {
         String username = getCurrentUser();
         if (!rateLimitingService.isAllowed(username)) {
@@ -54,6 +65,12 @@ public class ChatService {
         return String.format("Welcome %s, joined the chat room.", username);
     }
 
+    /**
+     * Sends a message to the chat room.
+     *
+     * @param message the message to be sent.
+     * @return a success message if the message is sent, otherwise an error message.
+     */
     public String sendMessage(String message) {
         try {
             String username = getCurrentUser();
@@ -82,6 +99,12 @@ public class ChatService {
         }
     }
 
+    /**
+     * Retrieves messages from the chat room since a given timestamp.
+     *
+     * @param timestamp the timestamp from which to retrieve messages.
+     * @return a list of chat messages since the given timestamp.
+     */
     @Cacheable(value = "chatMessages", key = "#timestamp")
     public List<ChatMessage> getMessagesSince(long timestamp) {
         String username = getCurrentUser();
@@ -112,22 +135,39 @@ public class ChatService {
         return messages;
     }
 
+    /**
+     * Deletes a message from the chat room.
+     *
+     * @param messageId the ID of the message to be deleted.
+     * @return a success message if the message is deleted, otherwise an error message.
+     */
     public String deleteMessage(long messageId) {
         String username = getCurrentUser();
         if (!rateLimitingService.isAllowed(username)) {
             return RATE_LIMIT_EXCEEDED;
         }
+    
+        // Fetch the message from the repository
+        Optional<ChatMessage> optionalMessage = chatMessageRepository.findById(messageId);
         
-        if (chatMessageRepository.existsById(messageId)) {
-            // Remove message from Redis
-            redisTemplate.opsForHash().delete("message:" + messageId);
-            redisTemplate.opsForList().remove(CHAT_ROOM_MESSAGES, 1, messageId);
-            redisTemplate.opsForZSet().remove(CHAT_ROOM_MESSAGES_BY_TIME, messageId);
-
-            chatMessageRepository.deleteById(messageId);
-            return "Successfully deleted the message";
+        if (optionalMessage.isPresent()) {
+            ChatMessage chatMessage = optionalMessage.get();
+            
+            // Check if the message belongs to the current user
+            if (chatMessage.getUsername().equals(username)) {
+                // Remove message from Redis
+                redisTemplate.opsForHash().delete("message:" + messageId);
+                redisTemplate.opsForList().remove(CHAT_ROOM_MESSAGES, 1, messageId);
+                redisTemplate.opsForZSet().remove(CHAT_ROOM_MESSAGES_BY_TIME, messageId);
+    
+                // Delete the message from the repository
+                chatMessageRepository.deleteById(messageId);
+                return "Successfully deleted the message";
+            } else {
+                return "You can only delete your own messages";
+            }
+        } else {
+            return "Message not found";
         }
-        return "Message not found";
-
     }
 }

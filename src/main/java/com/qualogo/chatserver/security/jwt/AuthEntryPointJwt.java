@@ -17,11 +17,25 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Component that handles unauthorized access attempts by implementing the AuthenticationEntryPoint interface.
+ * This class is used to commence an authentication scheme.
+ */
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
+    /**
+     * This method is called whenever an exception is thrown due to an unauthenticated user trying to access
+     * a resource that requires authentication.
+     *
+     * @param request       the HttpServletRequest being processed
+     * @param response      the HttpServletResponse being created
+     * @param authException the exception that caused the invocation
+     * @throws IOException      if an input or output error occurs while the servlet is handling the request
+     * @throws ServletException if the request could not be handled
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {

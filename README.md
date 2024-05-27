@@ -30,8 +30,8 @@ The project consists of multiple services organized as follows:
 - **MariaDB**: The database server for storing user and chat message data.
 - **Redis**: Optional, for caching purposes.
 - **Nginx**: For handling requests and load balancing.
-- **Splunk**: For log management and analysis.
-- **Rsync**: For syncing log files from the chat server to Splunk.
+- **Splunk**: For log management and analysis (TODO).
+- **Rsync**: For syncing log files from the chat server to Splunk (TODO).
 
 ### Step-by-Step Setup
 
@@ -76,7 +76,8 @@ The project consists of multiple services organized as follows:
 The following achievements have been realized:
 
 ### Testing with Postman
-Use Postman to test the RESTful endpoints and WebSocket communication. Below are the key endpoints and their functionalities:
+   - Postman workspace: "./Chat Server API.postman_collection.json"
+   - Use Postman to test the RESTful endpoints and WebSocket communication. Below are the key endpoints and their functionalities:
 
 - **User Authentication**:
   - **Signup**: \`POST /auth/signup\`
@@ -103,8 +104,13 @@ Include snapshots of Postman illustrating each step:
 6. **Delete Message**:
    ![Delete Message](./docs/05-delete.JPG)
 
+### Database:
+MariaDB database server. SQL script: ./docker/init.sql
+
 ### Code Quality
-- **Unit Tests**: Implemented using JUnit and Mockito to ensure functionality.
+- **Unit Tests**: Implemented using JUnit and Mockito to ensure functionality. All line of codes of each Java source code have been written Unit test cases.
+   ![Test coverage](./docs/06-testcoverage.JPG)
+
 - **Static Code Analysis**: Run SonarQube to analyze the static code quality. To execute the analysis:
   \`\`\`bash
   ./mvnw sonar:sonar -Dsonar.projectKey=<your-project-key> -Dsonar.host.url=<your-sonar-instance> -Dsonar.login=<your-sonar-login>

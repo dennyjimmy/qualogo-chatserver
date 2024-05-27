@@ -20,6 +20,11 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
+    /**
+     * Join a chat room.
+     * 
+     * @return A string message indicating the result of the join operation.
+     */
     @Operation(summary = "Join a chat room", description = "Enables users to join the chat room")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully joined the chat room",
@@ -30,6 +35,12 @@ public class ChatController {
         return chatService.joinRoom();
     }
 
+    /**
+     * Send a message to the chat room.
+     * 
+     * @param message The message to be sent.
+     * @return A string message indicating the result of the send operation.
+     */
     @Operation(summary = "Send a message", description = "Sends a message from a user to the chat room")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully sent the message",
@@ -41,6 +52,12 @@ public class ChatController {
         return chatService.sendMessage(message);
     }
 
+    /**
+     * Retrieve messages from the chat room since a given timestamp.
+     * 
+     * @param timestamp The timestamp from which to retrieve messages (in milliseconds).
+     * @return A list of chat messages since the given timestamp.
+     */
     @Operation(summary = "Retrieve messages", description = "Retrieves the history of the chat room from the given timestamp")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved messages",
@@ -52,6 +69,12 @@ public class ChatController {
         return chatService.getMessagesSince(timestamp);
     }
 
+    /**
+     * Delete a message in the chat room by message ID.
+     * 
+     * @param messageId The ID of the message to be deleted.
+     * @return A string message indicating the result of the delete operation.
+     */
     @Operation(summary = "Delete a message", description = "Deletes a message in the chat room by message ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully deleted the message",

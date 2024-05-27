@@ -25,8 +25,13 @@ public class JwtUtils {
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    /**
+     * Generates a JWT token based on the authenticated user's details.
+     *
+     * @param authentication the authentication object containing the user's details
+     * @return a JWT token as a String
+     */
     public String generateJwtToken(Authentication authentication) {
-
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
@@ -37,15 +42,32 @@ public class JwtUtils {
                 .compact();
     }
 
+    /**
+     * Generates a Key object from the JWT secret.
+     *
+     * @return a Key object used for signing the JWT
+     */
     public Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(getJwtSecret()));
     }
 
+    /**
+     * Extracts the username from a given JWT token.
+     *
+     * @param token the JWT token
+     * @return the username extracted from the token
+     */
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key()).build()
                 .parseClaimsJws(token).getBody().getSubject();
     }
 
+    /**
+     * Validates a given JWT token.
+     *
+     * @param authToken the JWT token to validate
+     * @return true if the token is valid, false otherwise
+     */
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
@@ -64,28 +86,36 @@ public class JwtUtils {
     }
 
     /**
-     * @return the jwtSecret
+     * Gets the JWT secret.
+     *
+     * @return the JWT secret as a String
      */
     public String getJwtSecret() {
         return jwtSecret;
     }
 
     /**
-     * @param jwtSecret the jwtSecret to set
+     * Sets the JWT secret.
+     *
+     * @param jwtSecret the JWT secret to set
      */
     public void setJwtSecret(String jwtSecret) {
         this.jwtSecret = jwtSecret;
     }
 
     /**
-     * @return the jwtExpirationMs
+     * Gets the JWT expiration time in milliseconds.
+     *
+     * @return the JWT expiration time in milliseconds
      */
     public int getJwtExpirationMs() {
         return jwtExpirationMs;
     }
 
     /**
-     * @param jwtExpirationMs the jwtExpirationMs to set
+     * Sets the JWT expiration time in milliseconds.
+     *
+     * @param jwtExpirationMs the JWT expiration time to set
      */
     public void setJwtExpirationMs(int jwtExpirationMs) {
         this.jwtExpirationMs = jwtExpirationMs;

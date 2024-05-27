@@ -20,6 +20,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.qualogo.chatserver.security.services.UserDetailsServiceImpl;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+/**
+ * AuthTokenFilter is a custom filter that extends OncePerRequestFilter.
+ * It intercepts each request to validate the JWT token and set the authentication in the security context.
+ */
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -30,6 +34,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
+    /**
+     * Filters each request to validate the JWT token and set the authentication in the security context.
+     *
+     * @param request     the HttpServletRequest object
+     * @param response    the HttpServletResponse object
+     * @param filterChain the FilterChain object
+     * @throws ServletException if an error occurs during the filtering process
+     * @throws IOException      if an I/O error occurs during the filtering process
+     */
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -55,6 +68,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Parses the JWT token from the request header.
+     *
+     * @param request the HttpServletRequest object
+     * @return the JWT token if present, otherwise null
+     */
     public String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 

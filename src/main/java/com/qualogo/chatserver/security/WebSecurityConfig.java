@@ -31,11 +31,21 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
+    /**
+     * Creates a bean for the JWT authentication token filter.
+     * 
+     * @return an instance of {@link AuthTokenFilter}
+     */
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
 
+    /**
+     * Creates a bean for the DAO authentication provider.
+     * 
+     * @return an instance of {@link DaoAuthenticationProvider}
+     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -46,16 +56,35 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
+    /**
+     * Creates a bean for the authentication manager.
+     * 
+     * @param authConfig the authentication configuration
+     * @return an instance of {@link AuthenticationManager}
+     * @throws Exception if an error occurs while getting the authentication manager
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
+    /**
+     * Creates a bean for the password encoder.
+     * 
+     * @return an instance of {@link PasswordEncoder}
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures the security filter chain.
+     * 
+     * @param http the HTTP security configuration
+     * @return an instance of {@link SecurityFilterChain}
+     * @throws Exception if an error occurs while configuring the security filter chain
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
@@ -73,14 +102,18 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * @return the unauthorizedHandler
+     * Gets the unauthorized handler.
+     * 
+     * @return the unauthorized handler
      */
     public AuthEntryPointJwt getUnauthorizedHandler() {
         return unauthorizedHandler;
     }
 
     /**
-     * @param unauthorizedHandler the unauthorizedHandler to set
+     * Sets the unauthorized handler.
+     * 
+     * @param unauthorizedHandler the unauthorized handler to set
      */
     public void setUnauthorizedHandler(AuthEntryPointJwt unauthorizedHandler) {
         this.unauthorizedHandler = unauthorizedHandler;
